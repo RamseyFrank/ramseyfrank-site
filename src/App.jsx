@@ -1,18 +1,9 @@
+// All imports go at the top
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-// Threads import MUST be here (not inside return)
-import Threads from './Threads';
+import Threads from './Threads'
 
 function App() {
   const [count, setCount] = useState(0)
