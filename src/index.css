@@ -16,3 +16,29 @@ body {
   100% { background-position: 0% 0%; }
 }
 
+/* Wave styles (your code) */
+div.wave{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+div.wave > span{
+  display: inline-block;
+  width: 100%;
+  height: 4px;
+  animation: animate 1.5s ease-in-out alternate infinite;
+}
+div.wave > span:nth-child(1){background-color: #B58900;}
+div.wave > span:nth-child(2){background-color: #F7877C; animation-delay: .2s;}
+div.wave > span:nth-child(3){background-color: #0E7DA8; animation-delay: .4s;}
+div.wave > span:nth-child(4){background-color: #C4EADF; animation-delay: .6s;}
+div.wave > span:nth-child(5){background-color: #B4A4CB; animation-delay: .8s;}
+div.wave > span:nth-child(6){background-color: #FBD92F; animation-delay: 1s;}
+div.wave > span:nth-child(7){background-color: #268BD2; animation-delay: 1.2s;}
+div.wave > span:nth-child(8){background-color: #859900; animation-delay: 1.4s;}
+div.wave > span:nth-child(9){background-color: #BBFFFF; animation-delay: 1.6s;}
+div.wave > span:nth-child(10){background-color: #FFE8E8; animation-delay: 1.8s;}
+@keyframes animate{
+  to { height: 100px; }
+}
