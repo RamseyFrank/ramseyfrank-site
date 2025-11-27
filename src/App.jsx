@@ -1,25 +1,19 @@
 import { useState } from "react";
 import "./App.css";
+import Wave from "./components/Wave";
+
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="App">
-      <h1>Hello, you!</h1>
-      <button onClick={() => setCount(count + 1)}>
-        Count is {count}
-      </button>
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      <Wave />   {/* 👈 This makes it appear */}
 
-      {/* Wave bars - outside of button */}
-      <div className="wave">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <span key={i}></span>
-        ))}
-      </div>
+      <h1 style={{ position: "relative", zIndex: 10 }}>
+        Hello, you!
+      </h1>
     </div>
   );
 }
 
-export default App;
 
+export default App;
