@@ -15,7 +15,7 @@ export default function Wave() {
         offsetY: -80, 
         amplitude: 60, 
         speed: 50, 
-        wavelength: 160,
+        wavelength: 200,
         color: '#6B7280',
         opacity: 0.25
       },
@@ -23,7 +23,7 @@ export default function Wave() {
         offsetY: -40, 
         amplitude: 65, 
         speed: 45, 
-        wavelength: 180,
+        wavelength: 220,
         color: '#9CA3AF',
         opacity: 0.35
       },
@@ -31,15 +31,15 @@ export default function Wave() {
         offsetY: 0, 
         amplitude: 70, 
         speed: 40, 
-        wavelength: 200,
-        color: '#D1D5DB',
-        opacity: 0.5
+        wavelength: 240,
+        color: '#6b7078',
+        opacity: 0.30
       },
       { 
         offsetY: 40, 
         amplitude: 65, 
         speed: 35, 
-        wavelength: 170,
+        wavelength: 260,
         color: '#9CA3AF',
         opacity: 0.35
       },
@@ -47,7 +47,7 @@ export default function Wave() {
         offsetY: 80, 
         amplitude: 60, 
         speed: 30, 
-        wavelength: 190,
+        wavelength: 300,
         color: '#6B7280',
         opacity: 0.25
       }
