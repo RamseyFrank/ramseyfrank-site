@@ -1,22 +1,25 @@
-import { useState } from "react";
 import "./App.css";
 import Wave from "./components/Wave";
-
+import Particles from "./components/Particles";
 
 function App() {
   return (
-    <div style={{ position: "relative", minHeight: "100vh" }}>
-      <Wave />   {/* 👈 This makes it appear */}
+    <div className="app-root">
 
-      <h1 style={{ position: "relative", zIndex: 10 }}>
-        Ramsey Frank's Personal Website <br />
-        <span style={{ fontSize: "1.5rem", color: "#6b7078" }}>
-          A place to learn about me and my work
-        </span>
-      </h1>
+      <div className="layer-base" />                     {/* Background */}
+      <div className="layer-waves"><Wave /></div>       {/* Waves */}
+      <div className="layer-particles"><Particles /></div> {/* Particles */}
+      <div className="layer-ui">                        {/* UI */}
+        <h1>
+          Ramsey Frank's Personal Website <br />
+          <span style={{ fontSize: "1.5rem", color: "#6b7078" }}>
+            A place to learn about me and my work
+          </span>
+        </h1>
+      </div>
+
     </div>
   );
 }
-
 
 export default App;

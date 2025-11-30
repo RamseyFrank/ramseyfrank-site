@@ -1,4 +1,32 @@
-h1, button, div {
-  position: relative;
-  z-index: 10;
-}
+.app-root {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+ 
+  
+  .layer-base,
+  .layer-waves,
+  .layer-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+
+
+  .layer-waves { z-index: 1; }
+  .layer-particles { z-index: 2; }
+  
+  .layer-ui {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding-top: 4rem;
+    color: white;
+  }
+  
