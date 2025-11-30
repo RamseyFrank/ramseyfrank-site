@@ -8,12 +8,38 @@ function App() {
 
       <div className="layer-base" />                     {/* Background */}
       <div className="layer-waves"><Wave /></div>       {/* Waves */}
-      <div className="layer-particles"><Particles /></div> {/* Particles */}
+      <div
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    pointerEvents: "none", // lets UI clicks pass through
+    zIndex: 2, // above waves, below UI
+    
+  }}
+>
+  <Particles
+    particleColors={['#ffffff', '#ffffff']}
+    particleCount={200}
+    particleSpread={20}
+    speed={0.1}
+    particleBaseSize={100}
+    moveParticlesOnHover={true}
+    alphaParticles={false}
+    disableRotation={false}
+  />
+</div>
+ {/* Particles */}
       <div className="layer-ui">                        {/* UI */}
         <h1>
-          Ramsey Frank's Personal Website <br />
+           <br />
           <span style={{ fontSize: "1.5rem", color: "#6b7078" }}>
-            A place to learn about me and my work
+            
           </span>
         </h1>
       </div>
