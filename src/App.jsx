@@ -9,10 +9,10 @@ function App() {
       <div className="layer-waves"><Wave /></div>
       <div className="layer-particles">
       <Particles
-  particleCount={200}
+  particleCount={100}
   particleSpread={5}        // Try reducing this
   cameraDistance={15}       // Try reducing this
-  particleBaseSize={50}     // Try reducing this
+  particleBaseSize={35}     // Try reducing this
   sizeRandomness={0.5}
 />
       </div>
