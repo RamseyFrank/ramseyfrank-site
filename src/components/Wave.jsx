@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 export default function Wave() {
   const pathRefs = useRef([]);
   const animationRef = useRef(null);
+  const svgRef = useRef(null);
 
   useEffect(() => {
     const widthStep = 2;
@@ -139,9 +140,18 @@ export default function Wave() {
       wavesOffsets.forEach((_, index) => {
         wavesOffsets[index] = Array.from({ length: pointsCount }, () => (Math.random() - 0.5) * 1.5);
       });
+      
+      // Update SVG viewBox on resize/zoom
+      if (svgRef.current) {
+        svgRef.current.setAttribute(
+          "viewBox",
+          `-100 0 ${window.innerWidth + 200} ${window.innerHeight}`
+        );
+      }
     }
 
     window.addEventListener('resize', handleResize);
+    window.addEventListener('zoom', handleResize);
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
@@ -149,6 +159,7 @@ export default function Wave() {
         cancelAnimationFrame(animationRef.current);
       }
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('zoom', handleResize);
     };
   }, []);
 
@@ -163,6 +174,7 @@ export default function Wave() {
   return (
     <div className="w-full h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex items-center justify-center">
       <svg
+        ref={svgRef}
         style={{
           position: "absolute",
           top: 0,

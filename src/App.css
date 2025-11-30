@@ -1,33 +1,28 @@
 .app-root {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
- 
-  
-  .layer-base,
-  .layer-waves,
-  .layer-particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-  }
-  
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 
+.layer-base,
+.layer-waves,
+.layer-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
 
-  .layer-waves { z-index: 1; }
-  .layer-particles { z-index: 2; }
-  
-  .layer-ui {
-    position: center;
-    top: auto;
-    z-index: 10;
-    text-align: center;
-    padding-top: 4rem;
-    color: white;
-  }
-  
+.layer-waves { z-index: 1; }
+.layer-particles { z-index: 2; }
+
+.layer-ui {
+  position: relative;  /* Changed from 'center' */
+  z-index: 10;
+  text-align: center;
+  padding-top: 4rem;
+  color: white;
+  width: 100%;  /* Added to ensure full width */
+}

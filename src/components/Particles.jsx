@@ -1,10 +1,5 @@
-
-
-
 import { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
-
-
 
 const defaultColors = ['#ffffff', '#ffffff', '#ffffff'];
 
@@ -90,7 +85,7 @@ const fragment = /* glsl */ `
 
 const Particles = ({
   particleCount = 200,
-  particleSpread = 10,
+  particleSpread = 100,
   speed = 0.1,
   particleColors,
   moveParticlesOnHover = false,
@@ -98,7 +93,7 @@ const Particles = ({
   alphaParticles = false,
   particleBaseSize = 100,
   sizeRandomness = 1,
-  cameraDistance = 25,
+  cameraDistance = 2,
   disableRotation = true,
   className
 }) => {
@@ -111,6 +106,12 @@ const Particles = ({
 
     const renderer = new Renderer({ depth: false, alpha: true });
     const gl = renderer.gl;
+    
+    // Style the canvas to fill container and center content
+    gl.canvas.style.display = 'block';
+    gl.canvas.style.width = '100%';
+    gl.canvas.style.height = '100%';
+    
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
@@ -221,7 +222,6 @@ const Particles = ({
         container.removeChild(gl.canvas);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     particleCount,
     particleSpread,
@@ -235,7 +235,17 @@ const Particles = ({
     disableRotation
   ]);
 
-  return <div ref={containerRef} className={`particles-container ${className}`} />;
+  return (
+    <div
+      ref={containerRef}
+      className={`particles-container ${className}`}
+      style={{
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden'
+      }}
+    />
+  );
 };
 
 export default Particles;
