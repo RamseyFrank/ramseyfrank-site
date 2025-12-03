@@ -1,6 +1,7 @@
 import "./App.css";
 import Wave from "./components/Wave";
 import Particles from "./components/Particles";
+import XMBNav from "./components/XMBNav";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             
           </span>
         </h1>
+        <XMBNav />
       </div>
     </div>
   );
