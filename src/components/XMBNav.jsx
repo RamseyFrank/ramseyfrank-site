@@ -43,41 +43,16 @@ export default function XMBNav() {
     }
   };
 
-  const playNavigationSound = (direction) => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-    
-    oscillator.frequency.value = direction === 'right' ? 800 : 600;
-    oscillator.type = 'sine';
-    
-    gain.gain.setValueAtTime(0.1, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
+  const playNavigationSound = () => {
+    const audio = new Audio('/src/assets/audio_nav.mp3');
+    audio.volume = 0.3;
+    audio.play();
   };
-
+  
   const playSelectionSound = () => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-    
-    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.2);
-    oscillator.type = 'sine';
-    
-    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.2);
+    const audio = new Audio('/src/assets/audio_nav.mp3');
+    audio.volume = 0.3;
+    audio.play();
   };
 
   useEffect(() => {
