@@ -44,13 +44,13 @@ export default function XMBNav() {
   };
 
   const playNavigationSound = () => {
-    const audio = new Audio('/src/assets/audio_nav.mp3');
+    const audio = new Audio('/public/audio_nav.mp3');
     audio.volume = 0.3;
     audio.play();
   };
   
   const playSelectionSound = () => {
-    const audio = new Audio('/src/assets/audio_nav.mp3');
+    const audio = new Audio('/public/audio_nav.mp3');
     audio.volume = 0.3;
     audio.play();
   };
