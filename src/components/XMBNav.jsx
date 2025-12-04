@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function XMBNav() {
+export default function XMBNav({ onSelectCategory }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -60,11 +60,15 @@ export default function XMBNav() {
       if (e.key === 'ArrowLeft') {
         hapticFeedback();
         playNavigationSound('left');
-        setActiveIndex((prev) => (prev - 1 + categories.length) % categories.length);
+        const newIndex = (activeIndex - 1 + categories.length) % categories.length;
+        setActiveIndex(newIndex);
+        onSelectCategory?.(categories[newIndex].id);
       } else if (e.key === 'ArrowRight') {
         hapticFeedback();
         playNavigationSound('right');
-        setActiveIndex((prev) => (prev + 1) % categories.length);
+        const newIndex = (activeIndex + 1) % categories.length;
+        setActiveIndex(newIndex);
+        onSelectCategory?.(categories[newIndex].id);
       } else if (e.key === 'Enter') {
         selectionHaptic();
         playSelectionSound();
@@ -73,10 +77,10 @@ export default function XMBNav() {
         setSelectedCategory(null);
       }
     };
-
+  
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [categories, activeIndex]);
+  }, [activeIndex]);
 
   return (
     <div style={styles.root}>
@@ -313,3 +317,4 @@ styleSheet.textContent = `
   }
 `;
 document.head.appendChild(styleSheet);
+
