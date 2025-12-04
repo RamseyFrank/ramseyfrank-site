@@ -45,13 +45,13 @@ export default function XMBNav() {
 
   const playNavigationSound = () => {
     const audio = new Audio('/audio_nav.mp3');
-    audio.volume = 0.3;
+    audio.volume = 0.7;
     audio.play();
   };
   
   const playSelectionSound = () => {
     const audio = new Audio('/audio_nav.mp3');
-    audio.volume = 0.3;
+    audio.volume = 0.7;
     audio.play();
   };
 
