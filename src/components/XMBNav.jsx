@@ -31,6 +31,7 @@ export default function XMBNav({ onSelectCategory }) {
     },
   ];
 
+  
   const hapticFeedback = () => {
     if (navigator.vibrate) {
       navigator.vibrate(30);
@@ -91,7 +92,7 @@ export default function XMBNav({ onSelectCategory }) {
         
         {/* Scrolling items container */}
         <div style={styles.itemsWrapper}>
-          {categories.map((category, index) => {
+        {categories.map((category, index) => {
             const distance = index - activeIndex;
             const isActive = index === activeIndex;
             const scale = Math.max(0.5, 1 - Math.abs(distance) * 0.2);
@@ -99,22 +100,25 @@ export default function XMBNav({ onSelectCategory }) {
             const zIndex = 100 - Math.abs(distance);
             
             return (
-              <div
+                <div
                 key={category.id}
-                onClick={() => setActiveIndex(index)}
-                style={{
-                  ...styles.itemContainer,
-                  transform: `translateX(${distance * 140}px) scale(${scale})`,
-                  opacity: opacity,
-                  zIndex: zIndex,
+                onClick={() => {
+                    setActiveIndex(index);
+                    onSelectCategory?.(category.id);
                 }}
-              >
+                style={{
+                    ...styles.itemContainer,
+                    transform: `translateX(${distance * 140}px) scale(${scale})`,
+                    opacity: opacity,
+                    zIndex: zIndex,
+                }}
+                >
                 <div style={{...styles.icon, ...(isActive ? styles.iconActive : {})}}>
-                  {category.icon}
+                    {category.icon}
                 </div>
-              </div>
+                </div>
             );
-          })}
+            })}
         </div>
 
         {/* Right gradient accent */}
