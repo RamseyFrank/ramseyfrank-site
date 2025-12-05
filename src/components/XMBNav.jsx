@@ -103,6 +103,8 @@ export default function XMBNav({ onSelectCategory }) {
                 <div
                 key={category.id}
                 onClick={() => {
+                    playSelectionSound();
+                    hapticFeedback();
                     setActiveIndex(index);
                     onSelectCategory?.(category.id);
                 }}
