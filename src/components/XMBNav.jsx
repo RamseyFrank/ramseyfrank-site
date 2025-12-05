@@ -1,37 +1,16 @@
 import { useState, useEffect } from 'react';
 
-export default function XMBNav({ onSelectCategory }) {
+export default function XMBNav({ onCategoryChange }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const categories = [
-    { 
-      id: 'home', 
-      label: 'Home', 
-      icon: '⌂',
-      description: 'Welcome'
-    },
-    { 
-      id: 'projects', 
-      label: 'Projects', 
-      icon: '◆',
-      description: 'My Work'
-    },
-    { 
-      id: 'about', 
-      label: 'About', 
-      icon: '●',
-      description: 'About Me'
-    },
-    { 
-      id: 'contact', 
-      label: 'Contact', 
-      icon: '■',
-      description: 'Get In Touch'
-    },
+    { id: 'home', label: 'Home', icon: '⌂', description: 'Welcome' },
+    { id: 'projects', label: 'Projects', icon: '◆', description: 'My Work' },
+    { id: 'about', label: 'About', icon: '●', description: 'About Me' },
+    { id: 'contact', label: 'Contact', icon: '■', description: 'Get In Touch' },
   ];
 
-  
   const hapticFeedback = () => {
     if (navigator.vibrate) {
       navigator.vibrate(30);
@@ -56,20 +35,27 @@ export default function XMBNav({ onSelectCategory }) {
     audio.play();
   };
 
+  const handleCategoryChange = (index) => {
+    setActiveIndex(index);
+    onCategoryChange(categories[index].id);
+    hapticFeedback();
+    playNavigationSound();
+  };
+
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === 'ArrowLeft') {
-        hapticFeedback();
-        playNavigationSound('left');
         const newIndex = (activeIndex - 1 + categories.length) % categories.length;
         setActiveIndex(newIndex);
-        onSelectCategory?.(categories[newIndex].id);
-      } else if (e.key === 'ArrowRight') {
+        onCategoryChange(categories[newIndex].id);
         hapticFeedback();
-        playNavigationSound('right');
+        playNavigationSound();
+      } else if (e.key === 'ArrowRight') {
         const newIndex = (activeIndex + 1) % categories.length;
         setActiveIndex(newIndex);
-        onSelectCategory?.(categories[newIndex].id);
+        onCategoryChange(categories[newIndex].id);
+        hapticFeedback();
+        playNavigationSound();
       } else if (e.key === 'Enter') {
         selectionHaptic();
         playSelectionSound();
@@ -81,18 +67,15 @@ export default function XMBNav({ onSelectCategory }) {
   
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [activeIndex]);
+  }, [activeIndex, categories]);
 
   return (
     <div style={styles.root}>
       {/* Main XMB Bar */}
       <div style={styles.xmbBar}>
-        {/* Left gradient accent */}
-        <div style={styles.leftAccent} />
-        
         {/* Scrolling items container */}
         <div style={styles.itemsWrapper}>
-        {categories.map((category, index) => {
+          {categories.map((category, index) => {
             const distance = index - activeIndex;
             const isActive = index === activeIndex;
             const scale = Math.max(0.5, 1 - Math.abs(distance) * 0.2);
@@ -100,31 +83,23 @@ export default function XMBNav({ onSelectCategory }) {
             const zIndex = 100 - Math.abs(distance);
             
             return (
-                <div
+              <div
                 key={category.id}
-                onClick={() => {
-                    playSelectionSound();
-                    hapticFeedback();
-                    setActiveIndex(index);
-                    onSelectCategory?.(category.id);
-                }}
+                onClick={() => handleCategoryChange(index)}
                 style={{
-                    ...styles.itemContainer,
-                    transform: `translateX(${distance * 140}px) scale(${scale})`,
-                    opacity: opacity,
-                    zIndex: zIndex,
+                  ...styles.itemContainer,
+                  transform: `translateX(${distance * 140}px) scale(${scale})`,
+                  opacity: opacity,
+                  zIndex: zIndex,
                 }}
-                >
+              >
                 <div style={{...styles.icon, ...(isActive ? styles.iconActive : {})}}>
-                    {category.icon}
+                  {category.icon}
                 </div>
-                </div>
+              </div>
             );
-            })}
+          })}
         </div>
-
-        {/* Right gradient accent */}
-        <div style={styles.rightAccent} />
       </div>
 
       {/* Bottom navigation dots */}
@@ -132,7 +107,7 @@ export default function XMBNav({ onSelectCategory }) {
         {categories.map((_, index) => (
           <div
             key={index}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => handleCategoryChange(index)}
             style={{
               ...styles.dot,
               ...(index === activeIndex ? styles.dotActive : {}),
@@ -184,12 +159,6 @@ const styles = {
     height: '200px',
     pointerEvents: 'auto',
     perspective: '1000px',
-  },
-  leftAccent: {
-    display: 'none'
-  },
-  rightAccent: {
-    display: 'none'
   },
   itemsWrapper: {
     position: 'relative',
@@ -323,4 +292,3 @@ styleSheet.textContent = `
   }
 `;
 document.head.appendChild(styleSheet);
-

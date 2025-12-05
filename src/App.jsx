@@ -6,7 +6,7 @@ import XMBNav from "./components/XMBNav";
 import TileSystem from "./components/TileSystem";
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState('home');
+  const [activeCategory, setActiveCategory] = useState('home');
 
   return (
     <div className="app-root">
@@ -28,8 +28,8 @@ function App() {
             
           </span>
         </h1>
-        <XMBNav onSelectCategory={setSelectedCategory} />
-        {selectedCategory === 'home' && <TileSystem selectedCategory={selectedCategory} />}
+        <XMBNav onCategoryChange={setActiveCategory} />
+        <TileSystem selectedCategory={activeCategory} />
       </div>
     </div>
   );

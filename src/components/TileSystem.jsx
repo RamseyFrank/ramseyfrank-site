@@ -132,7 +132,7 @@ export default function TileSystem({ selectedCategory = 'home' }) {
       letterSpacing: '0.5px',
     },
     tileContent: {
-      fontSize: '13px',
+      fontSize: '18px',
       color: 'rgba(255, 255, 255, 0.75)',
       margin: 0,
       lineHeight: '1.6',
