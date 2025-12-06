@@ -7,8 +7,14 @@ export default function TileSystem({ selectedCategory = 'home' }) {
       tiles: [
         {
           id: 1,
-          heading: 'Welcome',
-          content: 'Hi, I\'m Ramsey Frank. I\'m learning to build things on the web.'
+          heading: '',
+          content: (
+            <div style={{fontSize: '24px', lineHeight: '1.8'}}>
+              Hi, I'm <span style={{fontWeight: '900', color: '#ffffff'}}>Ramsey Frank</span>.
+              <br />
+              I'm <span style={{fontWeight: '900', color: '#6b7078'}}>learning to build</span> things on the web.
+            </div>
+          )
         }
       ]
     },
@@ -27,6 +33,7 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           heading: 'Particle Effects',
           content: 'WebGL-powered particle system with 3D camera controls and real-time rendering.'
         }
+        
       ]
     },
     about: {
@@ -109,6 +116,7 @@ export default function TileSystem({ selectedCategory = 'home' }) {
 }
 
 const styles = {
+  
   container: {
     position: 'fixed',
     top: '400px',
@@ -140,9 +148,11 @@ const styles = {
     minHeight: '180px',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     transition: 'all 0.3s ease',
     cursor: 'pointer',
+    alignItems: 'center',
+    textAlign: 'center',
   },
   tileHeading: {
     fontSize: '18px',
@@ -156,7 +166,7 @@ const styles = {
     fontSize: '18px',
     color: 'rgba(255, 255, 255, 0.75)',
     margin: 0,
-    lineHeight: '1.6',
+    lineHeight: '1.8',
     letterSpacing: '0.3px',
   },
   skillsGrid: {

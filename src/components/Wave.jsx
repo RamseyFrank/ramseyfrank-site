@@ -164,11 +164,11 @@ export default function Wave() {
   }, []);
 
   const waveConfigs = [
-    { color: '#6B7280', opacity: 0.25 },
-    { color: '#9CA3AF', opacity: 0.35 },
-    { color: '#D1D5DB', opacity: 0.5 },
-    { color: '#9CA3AF', opacity: 0.35 },
-    { color: '#6B7280', opacity: 0.25 }
+    { color: '#6B7280', opacity: 0.06 },
+    { color: '#9CA3AF', opacity: 0.1 },
+    { color: '#D1D5DB', opacity: 0.12 },
+    { color: '#9CA3AF', opacity: 0.1 },
+    { color: '#6B7280', opacity: 0.06 }
   ];
 
   return (
