@@ -5,10 +5,47 @@ export default function XMBNav({ onCategoryChange }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const categories = [
-    { id: 'home', label: 'Home', icon: '⌂', description: 'Welcome' },
-    { id: 'projects', label: 'Projects', icon: '◆', description: 'My Work' },
-    { id: 'about', label: 'About', icon: '●', description: 'About Me' },
-    { id: 'contact', label: 'Contact', icon: '■', description: 'Get In Touch' },
+    { 
+      id: 'home', 
+      label: 'Home', 
+      icon: (
+        <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
+          <polyline points="3 12 12 3 21 12" />
+          <polyline points="5 12 5 19 19 19 19 12" />
+        </svg>
+      ), 
+      description: 'Welcome' 
+    },
+    { 
+      id: 'projects', 
+      label: 'Projects', 
+      icon: (
+        <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
+          <polygon points="12,3 21,19 3,19" />
+        </svg>
+      ), 
+      description: 'My Work' 
+    },
+    { 
+      id: 'about', 
+      label: 'About', 
+      icon: (
+        <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      ), 
+      description: 'About Me' 
+    },
+    { 
+      id: 'contact', 
+      label: 'Contact', 
+      icon: (
+        <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="4" y="4" width="16" height="16" />
+        </svg>
+      ), 
+      description: 'Get In Touch' 
+    },
   ];
 
   const hapticFeedback = () => {
@@ -173,7 +210,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    transition: 'all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
     cursor: 'pointer',
     transformStyle: 'preserve-3d',
   },
@@ -182,6 +219,9 @@ const styles = {
     transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
     textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
     color: 'rgba(255, 255, 255, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   iconActive: {
     fontSize: '70px',

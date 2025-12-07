@@ -1,4 +1,14 @@
+import { useState, useEffect } from 'react';
+
 export default function TileSystem({ selectedCategory = 'home' }) {
+  const [selectedTile, setSelectedTile] = useState(null);
+
+  const playNavigationSound = () => {
+    const audio = new Audio('/audio_nav.mp3');
+    audio.volume = 0.7;
+    audio.play();
+  };
+
   const categories = {
     home: {
       title: 'Home',
@@ -33,7 +43,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           heading: 'Particle Effects',
           content: 'WebGL-powered particle system with 3D camera controls and real-time rendering.'
         }
-        
       ]
     },
     about: {
@@ -74,18 +83,89 @@ export default function TileSystem({ selectedCategory = 'home' }) {
 
   const current = categories[selectedCategory];
 
+  useEffect(() => {
+    setSelectedTile(null);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+
+    const handleKeyPress = (e) => {
+      if (current.type === 'text') {
+        const tiles = current.tiles;
+        const currentIndex = tiles.findIndex(t => t.id === selectedTile);
+        
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 1, tiles.length - 1);
+          setSelectedTile(tiles[nextIndex].id);
+          playNavigationSound();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 1, 0);
+          setSelectedTile(tiles[prevIndex].id);
+          playNavigationSound();
+        }
+      } else if (current.type === 'skills') {
+        const currentIndex = skills.findIndex(s => s.id === selectedTile);
+        
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 1, skills.length - 1);
+          setSelectedTile(skills[nextIndex].id);
+          playNavigationSound();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 1, 0);
+          setSelectedTile(skills[prevIndex].id);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 3, skills.length - 1);
+          setSelectedTile(skills[nextIndex].id);
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 3, 0);
+          setSelectedTile(skills[prevIndex].id);
+          playNavigationSound();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 3, skills.length - 1);
+          setSelectedTile(skills[nextIndex].id);
+          playNavigationSound();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 3, 0);
+          setSelectedTile(skills[prevIndex].id);
+          playNavigationSound();
+        }
+        playNavigationSound();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedTile, current]);
+
+
   if (!current) return null;
 
   return (
     <div style={styles.container}>
       {current.type === 'text' ? (
-        // Text tiles for Home, Projects, Contact
         <div style={styles.tilesContainer}>
           {current.tiles.map((tile, idx) => (
             <div
               key={tile.id}
+              onClick={() => {
+                setSelectedTile(tile.id);
+                playNavigationSound();
+              }}
+              onMouseEnter={() => {
+                setSelectedTile(tile.id);
+                playNavigationSound();
+              }}
               style={{
                 ...styles.tile,
+                ...(selectedTile === tile.id ? styles.tileActive : {}),
                 animation: `fadeInUp 0.5s ease-out ${idx * 0.1}s both`
               }}
             >
@@ -95,13 +175,19 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           ))}
         </div>
       ) : (
-        // Skills grid for About
         <div style={styles.skillsGrid}>
           {skills.map((skill, idx) => (
             <div
               key={skill.id}
+              onClick={() => {
+                setSelectedTile(skill.id);
+                playNavigationSound();
+              }}
+              
+              
               style={{
                 ...styles.skillTile,
+                ...(selectedTile === skill.id ? styles.skillTileActive : {}),
                 animation: `fallUp 0.4s ease-out ${idx * 0.08}s both`
               }}
             >
@@ -116,7 +202,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
 }
 
 const styles = {
-  
   container: {
     position: 'fixed',
     top: '400px',
@@ -131,6 +216,7 @@ const styles = {
     pointerEvents: 'auto',
     fontFamily: 'sans-serif',
     paddingBottom: '40px',
+    animation: 'fadeInCategory 0.4s ease-in-out',
   },
   tilesContainer: {
     display: 'flex',
@@ -153,6 +239,12 @@ const styles = {
     cursor: 'pointer',
     alignItems: 'center',
     textAlign: 'center',
+  },
+  tileActive: {
+    background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.25), rgba(40, 40, 40, 0.25))',
+    border: '2px solid rgba(107, 112, 120, 0.8)',
+    boxShadow: '0 0 20px rgba(107, 112, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+    animation: 'glowBorder 2s ease-in-out infinite',
   },
   tileHeading: {
     fontSize: '18px',
@@ -192,6 +284,12 @@ const styles = {
     width: '100%',
     aspectRatio: '1',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+  },
+  skillTileActive: {
+    background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.3), rgba(40, 40, 40, 0.3))',
+    border: '2px solid rgba(107, 112, 120, 0.8)',
+    boxShadow: '0 0 20px rgba(107, 112, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+    animation: 'glowBorder 2s ease-in-out infinite',
   },
   emoji: {
     fontSize: '48px',
@@ -233,6 +331,38 @@ styleSheet.textContent = `
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes fadeInCategory {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glowBorder {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(107, 112, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border-color: rgba(107, 112, 120, 0.8);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(107, 112, 120, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(107, 112, 120, 1);
+    }
+  }
+
+  @keyframes waveEffect {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
   }
 

@@ -7,6 +7,11 @@ import TileSystem from "./components/TileSystem";
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('home');
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = (e) => {
+    setScrollPosition(e.target.scrollLeft);
+  };
 
   return (
     <div className="app-root">
@@ -22,14 +27,20 @@ function App() {
         />
       </div>
       <div className="layer-ui">
-        <h1>
-          <br />
-          <span style={{ fontSize: "1.5rem", color: "#6b7078" }}>
-            
-          </span>
-        </h1>
         <XMBNav onCategoryChange={setActiveCategory} />
-        <TileSystem selectedCategory={activeCategory} />
+        <div 
+          style={{
+            position: 'fixed',
+            top: '400px',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            overflowY: 'auto',
+            zIndex: 40,
+          }}
+        >
+          <TileSystem selectedCategory={activeCategory} />
+        </div>
       </div>
     </div>
   );

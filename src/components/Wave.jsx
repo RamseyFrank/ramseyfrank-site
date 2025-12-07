@@ -6,7 +6,7 @@ export default function Wave() {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    const widthStep = 2;
+    const widthStep = 4;
     let waveWidth = window.innerWidth;
     let pointsCount = Math.ceil(waveWidth / widthStep) + 1;
 
