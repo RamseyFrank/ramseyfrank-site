@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react';
 
+const SKILLS = [
+  { id: 1, emoji: '⚛️', name: 'React' },
+  { id: 2, emoji: '🟨', name: 'JavaScript' },
+  { id: 3, emoji: '🎨', name: 'CSS' },
+  { id: 4, emoji: '📦', name: 'Node.js' },
+  { id: 5, emoji: '🟦', name: 'Three.js' },
+  { id: 6, emoji: '🎯', name: 'WebGL' },
+  { id: 7, emoji: '💾', name: 'SQL' },
+  { id: 8, emoji: '🚀', name: 'Vite' },
+  { id: 9, emoji: '🎭', name: 'UI/UX' },
+];
+
 export default function TileSystem({ selectedCategory = 'home' }) {
   const [selectedTile, setSelectedTile] = useState(null);
 
@@ -69,26 +81,14 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     }
   };
 
-  const skills = [
-    { id: 1, emoji: '⚛️', name: 'React' },
-    { id: 2, emoji: '🟨', name: 'JavaScript' },
-    { id: 3, emoji: '🎨', name: 'CSS' },
-    { id: 4, emoji: '📦', name: 'Node.js' },
-    { id: 5, emoji: '🟦', name: 'Three.js' },
-    { id: 6, emoji: '🎯', name: 'WebGL' },
-    { id: 7, emoji: '💾', name: 'SQL' },
-    { id: 8, emoji: '🚀', name: 'Vite' },
-    { id: 9, emoji: '🎭', name: 'UI/UX' },
-  ];
-
   const current = categories[selectedCategory];
 
   useEffect(() => {
     setSelectedTile(null);
   }, [selectedCategory]);
 
+  // Handle keyboard navigation
   useEffect(() => {
-
     const handleKeyPress = (e) => {
       if (current.type === 'text') {
         const tiles = current.tiles;
@@ -106,45 +106,43 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           playNavigationSound();
         }
       } else if (current.type === 'skills') {
-        const currentIndex = skills.findIndex(s => s.id === selectedTile);
+        let currentIndex = SKILLS.findIndex(s => s.id === selectedTile);
+        
+        if (currentIndex === -1) {
+          currentIndex = 0;
+        }
         
         if (e.key === 'ArrowRight') {
           e.preventDefault();
-          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 1, skills.length - 1);
-          setSelectedTile(skills[nextIndex].id);
-          playNavigationSound();
+          if (currentIndex < SKILLS.length - 1) {
+            setSelectedTile(SKILLS[currentIndex + 1].id);
+            playNavigationSound();
+          }
         } else if (e.key === 'ArrowLeft') {
           e.preventDefault();
-          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 1, 0);
-          setSelectedTile(skills[prevIndex].id);
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 3, skills.length - 1);
-          setSelectedTile(skills[nextIndex].id);
+          if (currentIndex > 0) {
+            setSelectedTile(SKILLS[currentIndex - 1].id);
+            playNavigationSound();
+          }
         } else if (e.key === 'ArrowDown') {
           e.preventDefault();
-          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 3, 0);
-          setSelectedTile(skills[prevIndex].id);
-          playNavigationSound();
+          if (currentIndex + 3 < SKILLS.length) {
+            setSelectedTile(SKILLS[currentIndex + 3].id);
+            playNavigationSound();
+          }
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
-          const nextIndex = currentIndex === -1 ? 0 : Math.min(currentIndex + 3, skills.length - 1);
-          setSelectedTile(skills[nextIndex].id);
-          playNavigationSound();
-        } else if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          const prevIndex = currentIndex === -1 ? 0 : Math.max(currentIndex - 3, 0);
-          setSelectedTile(skills[prevIndex].id);
-          playNavigationSound();
+          if (currentIndex - 3 >= 0) {
+            setSelectedTile(SKILLS[currentIndex - 3].id);
+            playNavigationSound();
+          }
         }
-        playNavigationSound();
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [selectedTile, current]);
-
 
   if (!current) return null;
 
@@ -156,10 +154,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
             <div
               key={tile.id}
               onClick={() => {
-                setSelectedTile(tile.id);
-                playNavigationSound();
-              }}
-              onMouseEnter={() => {
                 setSelectedTile(tile.id);
                 playNavigationSound();
               }}
@@ -176,15 +170,13 @@ export default function TileSystem({ selectedCategory = 'home' }) {
         </div>
       ) : (
         <div style={styles.skillsGrid}>
-          {skills.map((skill, idx) => (
+          {SKILLS.map((skill, idx) => (
             <div
               key={skill.id}
               onClick={() => {
                 setSelectedTile(skill.id);
                 playNavigationSound();
               }}
-              
-              
               style={{
                 ...styles.skillTile,
                 ...(selectedTile === skill.id ? styles.skillTileActive : {}),
@@ -351,18 +343,6 @@ styleSheet.textContent = `
     50% {
       box-shadow: 0 0 40px rgba(107, 112, 120, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.3);
       border-color: rgba(107, 112, 120, 1);
-    }
-  }
-
-  @keyframes waveEffect {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
     }
   }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import "./App.css";
+import XmbIntro from "./components/XmbIntro";
 import Wave from "./components/Wave";
 import Particles from "./components/Particles";
 import XMBNav from "./components/XMBNav";
@@ -7,14 +8,10 @@ import TileSystem from "./components/TileSystem";
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('home');
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  const handleScroll = (e) => {
-    setScrollPosition(e.target.scrollLeft);
-  };
 
   return (
     <div className="app-root">
+      <XmbIntro />
       <div className="layer-base" />
       <div className="layer-waves"><Wave /></div>
       <div className="layer-particles">
@@ -28,19 +25,7 @@ function App() {
       </div>
       <div className="layer-ui">
         <XMBNav onCategoryChange={setActiveCategory} />
-        <div 
-          style={{
-            position: 'fixed',
-            top: '400px',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            overflowY: 'auto',
-            zIndex: 40,
-          }}
-        >
-          <TileSystem selectedCategory={activeCategory} />
-        </div>
+        <TileSystem selectedCategory={activeCategory} />
       </div>
     </div>
   );
