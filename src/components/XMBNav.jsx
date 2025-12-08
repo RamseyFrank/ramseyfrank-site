@@ -153,22 +153,7 @@ export default function XMBNav({ onCategoryChange }) {
         ))}
       </div>
 
-      {/* Detail view modal */}
-      {selectedCategory && (
-        <div style={styles.modal} onClick={() => setSelectedCategory(null)}>
-          <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <div style={styles.modalHeader}>{selectedCategory.label}</div>
-            <div style={styles.modalBody}>
-              <p>Content for {selectedCategory.label}</p>
-            </div>
-            <div style={styles.modalFooter}>
-              <button style={styles.modalButton} onClick={() => setSelectedCategory(null)}>
-                Back
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }
