@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import "./App.css";
-import XMBIntro from "./components/XMBIntro";
+import XMBIntro from "./components/XmbIntro";
 import Wave from "./components/Wave";
 import Particles from "./components/Particles";
 import XMBNav from "./components/XMBNav";
