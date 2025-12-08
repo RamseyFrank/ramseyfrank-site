@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import "./App.css";
-import XmbIntro from "./components/XmbIntro";
+import XMBIntro from "./components/XMBIntro";
 import Wave from "./components/Wave";
 import Particles from "./components/Particles";
 import XMBNav from "./components/XMBNav";
@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="app-root">
-      <XmbIntro />
+      <XMBIntro />
       <div className="layer-base" />
       <div className="layer-waves"><Wave /></div>
       <div className="layer-particles">

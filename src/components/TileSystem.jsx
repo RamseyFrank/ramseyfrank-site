@@ -108,11 +108,26 @@ export default function TileSystem({ selectedCategory = 'home' }) {
       } else if (current.type === 'skills') {
         let currentIndex = SKILLS.findIndex(s => s.id === selectedTile);
         
-        if (currentIndex === -1) {
-          currentIndex = 0;
+        if (currentIndex === -1 && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+          e.preventDefault();
+          setSelectedTile(SKILLS[0].id);
+          playNavigationSound();
+          return;
         }
         
-        if (e.key === 'ArrowRight') {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (currentIndex < SKILLS.length - 1) {
+            setSelectedTile(SKILLS[currentIndex + 1].id);
+            playNavigationSound();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (currentIndex > 0) {
+            setSelectedTile(SKILLS[currentIndex - 1].id);
+            playNavigationSound();
+          }
+        } else if (e.key === 'ArrowRight') {
           e.preventDefault();
           if (currentIndex < SKILLS.length - 1) {
             setSelectedTile(SKILLS[currentIndex + 1].id);
@@ -124,18 +139,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
             setSelectedTile(SKILLS[currentIndex - 1].id);
             playNavigationSound();
           }
-        } else if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          if (currentIndex + 3 < SKILLS.length) {
-            setSelectedTile(SKILLS[currentIndex + 3].id);
-            playNavigationSound();
-          }
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          if (currentIndex - 3 >= 0) {
-            setSelectedTile(SKILLS[currentIndex - 3].id);
-            playNavigationSound();
-          }
         }
       }
     };
@@ -144,10 +147,26 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [selectedTile, current]);
 
+  // Calculate vertical offset based on selected tile
+  const getContainerOffset = () => {
+    if (current.type === 'text') {
+      const tileIndex = current.tiles.findIndex(t => t.id === selectedTile);
+      if (tileIndex > 0) {
+        return tileIndex * 220; // 180px tile + 24px gap + 16px padding
+      }
+    } else if (current.type === 'skills') {
+      const skillIndex = SKILLS.findIndex(s => s.id === selectedTile);
+      if (skillIndex > 0) {
+        return skillIndex * 120; // 80px tile + 20px gap + 20px padding
+      }
+    }
+    return 0;
+  };
+
   if (!current) return null;
 
   return (
-    <div style={styles.container}>
+    <div style={{...styles.container, transform: `translateX(-50%) translateY(-${getContainerOffset()}px)`}}>
       {current.type === 'text' ? (
         <div style={styles.tilesContainer}>
           {current.tiles.map((tile, idx) => (
@@ -198,7 +217,6 @@ const styles = {
     position: 'fixed',
     top: '400px',
     left: '50%',
-    transform: 'translateX(-50%)',
     width: '90%',
     maxWidth: '900px',
     display: 'flex',
@@ -209,6 +227,7 @@ const styles = {
     fontFamily: 'sans-serif',
     paddingBottom: '40px',
     animation: 'fadeInCategory 0.4s ease-in-out',
+    transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
   tilesContainer: {
     display: 'flex',
@@ -254,17 +273,17 @@ const styles = {
     letterSpacing: '0.3px',
   },
   skillsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+    display: 'flex',
+    flexDirection: 'column',
     gap: '20px',
-    maxWidth: '600px',
+    maxWidth: '200px',
     margin: '0 auto',
   },
   skillTile: {
     background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.3), rgba(40, 40, 40, 0.3))',
     border: '1px solid rgba(107, 112, 120, 0.25)',
     borderRadius: '12px',
-    padding: '0',
+    padding: '16px',
     backdropFilter: 'blur(10px)',
     display: 'flex',
     flexDirection: 'column',
@@ -274,7 +293,7 @@ const styles = {
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     width: '100%',
-    aspectRatio: '1',
+    minHeight: '80px',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
   },
   skillTileActive: {
