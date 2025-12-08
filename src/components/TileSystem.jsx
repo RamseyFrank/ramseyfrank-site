@@ -163,10 +163,27 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     return 0;
   };
 
+  // Calculate skill tile position based on selection order
+  const getSkillTilePosition = (skillIdx) => {
+    if (!selectedTile) return 0;
+    const selectedIdx = SKILLS.findIndex(s => s.id === selectedTile);
+    
+    // Tiles before selected: move up above nav
+    if (skillIdx < selectedIdx) {
+      return -(selectedIdx - skillIdx) * 140; // 120px tile + 20px gap
+    }
+    // Selected tile and after: stay in normal flow
+    return 0;
+  };
+
   if (!current) return null;
 
   return (
-    <div style={{...styles.container, transform: `translateX(-50%) translateY(-${getContainerOffset()}px)`}}>
+    <div style={{
+      ...styles.container,
+      top: '400px',
+      transform: `translateX(-50%) translateY(-${getContainerOffset()}px)`
+    }}>
       {current.type === 'text' ? (
         <div style={styles.tilesContainer}>
           {current.tiles.map((tile, idx) => (
@@ -179,7 +196,9 @@ export default function TileSystem({ selectedCategory = 'home' }) {
               style={{
                 ...styles.tile,
                 ...(selectedTile === tile.id ? styles.tileActive : {}),
-                animation: `fadeInUp 0.5s ease-out ${idx * 0.1}s both`
+                animation: `fadeInUp 0.5s ease-out ${idx * 0.1}s both`,
+                marginTop: idx === 0 && selectedTile && current.tiles[1]?.id === selectedTile ? '-350px' : idx === 1 && selectedTile && current.tiles[1]?.id === selectedTile ? '350px' : '0',
+                transition: 'margin-top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
             >
               <h3 style={styles.tileHeading}>{tile.heading}</h3>
@@ -199,7 +218,9 @@ export default function TileSystem({ selectedCategory = 'home' }) {
               style={{
                 ...styles.skillTile,
                 ...(selectedTile === skill.id ? styles.skillTileActive : {}),
-                animation: `fallUp 0.4s ease-out ${idx * 0.08}s both`
+                animation: `fallUp 0.4s ease-out ${idx * 0.08}s both`,
+                marginTop: `${getSkillTilePosition(idx)}px`,
+                transition: 'margin-top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
             >
               <div style={styles.emoji}>{skill.emoji}</div>
@@ -215,7 +236,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
 const styles = {
   container: {
     position: 'fixed',
-    top: '400px',
     left: '50%',
     width: '90%',
     maxWidth: '900px',
@@ -227,7 +247,7 @@ const styles = {
     fontFamily: 'sans-serif',
     paddingBottom: '40px',
     animation: 'fadeInCategory 0.4s ease-in-out',
-    transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
   tilesContainer: {
     display: 'flex',
