@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function XMBNav({ onCategoryChange }) {
+export default function XMBNav({ onCategoryChange, currentCategory }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -88,13 +88,20 @@ export default function XMBNav({ onCategoryChange }) {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
+      // Skip left/right navigation if in skills section - let TileSystem handle it
+      if (currentCategory === 'skills' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        return;
+      }
+
       if (e.key === 'ArrowLeft') {
+        e.preventDefault();
         const newIndex = (activeIndex - 1 + categories.length) % categories.length;
         setActiveIndex(newIndex);
         onCategoryChange(categories[newIndex].id);
         hapticFeedback();
         playNavigationSound();
       } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
         const newIndex = (activeIndex + 1) % categories.length;
         setActiveIndex(newIndex);
         onCategoryChange(categories[newIndex].id);
@@ -111,7 +118,7 @@ export default function XMBNav({ onCategoryChange }) {
   
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [activeIndex, categories]);
+  }, [activeIndex, categories, currentCategory]);
 
   return (
     <div style={styles.root}>
