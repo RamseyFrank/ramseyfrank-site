@@ -13,8 +13,7 @@ export default function XMBNav({ onCategoryChange }) {
           <polyline points="3 12 12 3 21 12" />
           <polyline points="5 12 5 19 19 19 19 12" />
         </svg>
-      ), 
-      description: 'Welcome' 
+      ),  
     },
     { 
       id: 'projects', 
@@ -24,17 +23,25 @@ export default function XMBNav({ onCategoryChange }) {
           <polygon points="12,3 21,19 3,19" />
         </svg>
       ), 
-      description: 'My Work' 
     },
     { 
-      id: 'about', 
-      label: 'About', 
+      id: 'experience',
+      label: 'Experience',
       icon: (
         <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
         </svg>
       ), 
-      description: 'About Me' 
+    },
+    { 
+      id: 'skills',
+      label: 'Skills',
+      icon: (
+        <svg viewBox="0 0 28 28" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="4" y1="4" x2="24" y2="24" />
+          <line x1="24" y1="4" x2="4" y2="24" />
+        </svg>
+      ), 
     },
     { 
       id: 'contact', 
@@ -44,7 +51,7 @@ export default function XMBNav({ onCategoryChange }) {
           <rect x="4" y="4" width="16" height="16" />
         </svg>
       ), 
-      description: 'Get In Touch' 
+      
     },
   ];
 

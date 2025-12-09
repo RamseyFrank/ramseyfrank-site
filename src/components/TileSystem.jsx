@@ -24,7 +24,6 @@ export default function TileSystem({ selectedCategory = 'home' }) {
   const categories = {
     home: {
       title: 'Home',
-      icon: '⌂',
       type: 'text',
       tiles: [
         {
@@ -42,29 +41,32 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     },
     projects: {
       title: 'Projects',
-      icon: '◆',
       type: 'text',
       tiles: [
         {
           id: 1,
-          heading: 'XMB Navigation',
+          heading: 'Projects',
           content: 'A PS3-inspired navigation system with haptic feedback and audio cues.'
-        },
-        {
-          id: 2,
-          heading: 'Particle Effects',
-          content: 'WebGL-powered particle system with 3D camera controls and real-time rendering.'
         }
       ]
     },
-    about: {
-      title: 'About',
-      icon: '●',
+    experience: {
+      title: 'Experience',
+      type: 'text',
+      tiles: [
+        {
+          id: 1,
+          heading: 'Experience',
+          content: 'A collection of my professional experience and journey.'
+        }
+      ]
+    },
+    skills: {
+      title: 'Skills',
       type: 'skills'
     },
     contact: {
       title: 'Contact',
-      icon: '■',
       type: 'text',
       tiles: [
         {
