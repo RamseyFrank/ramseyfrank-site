@@ -15,6 +15,7 @@ const SKILLS = [
 export default function TileSystem({ selectedCategory = 'home' }) {
   const [selectedTile, setSelectedTile] = useState(null);
   const [skillRotation, setSkillRotation] = useState(0);
+  const [inSkillsCarousel, setInSkillsCarousel] = useState(false);
 
   const playNavigationSound = () => {
     const audio = new Audio('/audio_nav.mp3');
@@ -90,6 +91,14 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     setSelectedTile(null);
   }, [selectedCategory]);
 
+  // Sync carousel state with category changes
+  useEffect(() => {
+    if (selectedCategory !== 'skills') {
+      setInSkillsCarousel(false);
+      setSelectedTile(null);
+    }
+  }, [selectedCategory]);
+
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -109,21 +118,59 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           playNavigationSound();
         }
       } else if (current.type === 'skills') {
-        if (e.key === 'ArrowLeft') {
-          e.preventDefault();
-          setSkillRotation((prev) => prev + (360 / SKILLS.length));
-          playNavigationSound();
-        } else if (e.key === 'ArrowRight') {
-          e.preventDefault();
-          setSkillRotation((prev) => prev - (360 / SKILLS.length));
-          playNavigationSound();
+        if (!inSkillsCarousel) {
+          // Navigation at nav level
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setInSkillsCarousel(true);
+            playNavigationSound();
+          }
+        } else if (selectedTile) {
+          // If a skill tile is selected, left/right navigate through skills
+          const currentIndex = SKILLS.findIndex(s => s.id === selectedTile);
+          
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentIndex < SKILLS.length - 1) {
+              setSelectedTile(SKILLS[currentIndex + 1].id);
+              setSkillRotation((prev) => prev + (360 / SKILLS.length));
+              playNavigationSound();
+            }
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (currentIndex > 0) {
+              setSelectedTile(SKILLS[currentIndex - 1].id);
+              setSkillRotation((prev) => prev - (360 / SKILLS.length));
+              playNavigationSound();
+            }
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setInSkillsCarousel(false);
+            setSelectedTile(null);
+            playNavigationSound();
+          }
+        } else {
+          // Carousel visible but no skill selected yet
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            setSkillRotation((prev) => prev + (360 / SKILLS.length));
+            playNavigationSound();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            setSkillRotation((prev) => prev - (360 / SKILLS.length));
+            playNavigationSound();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setInSkillsCarousel(false);
+            playNavigationSound();
+          }
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [current]);
+  }, [current, inSkillsCarousel, selectedTile]);
 
   // Calculate vertical offset based on selected tile
   const getContainerOffset = () => {
@@ -137,6 +184,9 @@ export default function TileSystem({ selectedCategory = 'home' }) {
   };
 
   if (!current) return null;
+
+  // Pass skill selected state to XMBNav
+  const isSkillSelected = current.type === 'skills' && selectedTile !== null;
 
   return (
     <div style={{
@@ -177,19 +227,32 @@ export default function TileSystem({ selectedCategory = 'home' }) {
             >
               {SKILLS.map((skill, idx) => {
                 const anglePerItem = 360 / SKILLS.length;
+                const selectedIdx = SKILLS.findIndex(s => s.id === selectedTile);
+                const isSelected = selectedIdx === idx;
+                
                 return (
                   <div
                     key={skill.id}
                     style={{
                       ...styles.skillItem,
-                      transform: `rotateY(${idx * anglePerItem}deg) translateZ(280px)`,
+                      transform: `rotateY(${idx * anglePerItem}deg) translateZ(220px)`,
                     }}
                     onClick={() => {
                       setSelectedTile(skill.id);
+                      const selectedIndex = SKILLS.findIndex(s => s.id === skill.id);
+                      const currentIndex = selectedIdx;
+                      const diff = selectedIndex - currentIndex;
+                      const rotation = diff * (360 / SKILLS.length);
+                      setSkillRotation((prev) => prev + rotation);
                       playNavigationSound();
                     }}
                   >
-                    <div style={{...styles.skillTile, ...(selectedTile === skill.id ? styles.skillTileActive : {})}}>
+                    <div 
+                      style={{
+                        ...styles.skillTile, 
+                        ...(isSelected ? styles.skillTileActive : {}),
+                      }}
+                    >
                       <div style={styles.emoji}>{skill.emoji}</div>
                       <div style={styles.skillName}>{skill.name}</div>
                     </div>
@@ -267,7 +330,7 @@ const styles = {
     letterSpacing: '0.3px',
   },
   skillsScene: {
-    perspective: '1200px',
+    perspective: '1000px',
     width: '100%',
     height: '600px',
     display: 'flex',
@@ -275,22 +338,22 @@ const styles = {
     justifyContent: 'center',
     position: 'relative',
     perspectiveOrigin: 'center center',
+    background: 'radial-gradient(ellipse at center, rgba(107, 112, 120, 0.05) 0%, transparent 70%)',
   },
   skillsCarousel: {
     position: 'relative',
-    width: '600px',
-    height: '600px',
+    width: '500px',
+    height: '500px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    perspectiveOrigin: 'center center',
   },
   skillsCarouselInner: {
     position: 'relative',
     width: '100%',
     height: '100%',
     transformStyle: 'preserve-3d',
-    transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
     backfaceVisibility: 'visible',
   },
   skillItem: {
@@ -304,26 +367,27 @@ const styles = {
     backfaceVisibility: 'hidden',
   },
   skillTile: {
-    width: '120px',
-    height: '120px',
-    background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.4), rgba(40, 40, 40, 0.4))',
-    border: '1px solid rgba(107, 112, 120, 0.3)',
-    borderRadius: '16px',
+    width: '100px',
+    height: '100px',
+    background: 'linear-gradient(135deg, rgba(40, 40, 55, 0.5), rgba(30, 30, 45, 0.5))',
+    border: '1px solid rgba(107, 112, 120, 0.2)',
+    borderRadius: '8px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '8px',
-    backdropFilter: 'blur(10px)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+    gap: '6px',
+    backdropFilter: 'blur(6px)',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.3)',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.5s ease',
   },
   skillTileActive: {
-    background: 'linear-gradient(135deg, rgba(60, 60, 60, 0.25), rgba(40, 40, 40, 0.25))',
-    border: '2px solid rgba(107, 112, 120, 0.8)',
-    boxShadow: '0 0 20px rgba(107, 112, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-    animation: 'glowBorder 2s ease-in-out infinite',
+    background: 'linear-gradient(135deg, rgba(100, 110, 130, 0.6), rgba(70, 80, 100, 0.6))',
+    border: '1.5px solid rgba(107, 112, 120, 0.5)',
+    boxShadow: '0 8px 24px rgba(107, 112, 120, 0.3)',
+    backdropFilter: 'blur(12px)',
+    animation: 'skillGlow 2s ease-in-out infinite',
   },
   centerFocus: {
     position: 'absolute',
@@ -343,7 +407,7 @@ const styles = {
   },
   emoji: {
     fontSize: '48px',
-    transition: 'transform 0.3s ease',
+    transition: 'transform 0.4s ease',
   },
   skillName: {
     fontSize: '12px',
@@ -401,6 +465,17 @@ styleSheet.textContent = `
     50% {
       box-shadow: 0 0 40px rgba(107, 112, 120, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.3);
       border-color: rgba(107, 112, 120, 1);
+    }
+  }
+
+  @keyframes skillGlow {
+    0%, 100% {
+      box-shadow: 0 8px 24px rgba(107, 112, 120, 0.3), inset 0 0 12px rgba(107, 112, 120, 0.1);
+      border-color: rgba(107, 112, 120, 0.5);
+    }
+    50% {
+      box-shadow: 0 12px 36px rgba(107, 112, 120, 0.5), inset 0 0 16px rgba(107, 112, 120, 0.2);
+      border-color: rgba(107, 112, 120, 0.7);
     }
   }
 

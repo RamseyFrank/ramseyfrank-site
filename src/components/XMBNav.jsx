@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-export default function XMBNav({ onCategoryChange, currentCategory }) {
+export default function XMBNav({ onCategoryChange, currentCategory, skillSelected }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [inSkillsCarousel, setInSkillsCarousel] = useState(false);
 
   const categories = [
     { 
@@ -88,8 +88,8 @@ export default function XMBNav({ onCategoryChange, currentCategory }) {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      // Skip left/right navigation if in skills section - let TileSystem handle it
-      if (currentCategory === 'skills' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      // If in skills carousel, block left/right from changing categories
+      if (inSkillsCarousel && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
         return;
       }
 
@@ -107,18 +107,27 @@ export default function XMBNav({ onCategoryChange, currentCategory }) {
         onCategoryChange(categories[newIndex].id);
         hapticFeedback();
         playNavigationSound();
+      } else if (e.key === 'ArrowDown') {
+        if (categories[activeIndex].id === 'skills') {
+          e.preventDefault();
+          setInSkillsCarousel(true);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (inSkillsCarousel) {
+          e.preventDefault();
+          setInSkillsCarousel(false);
+        }
       } else if (e.key === 'Enter') {
         selectionHaptic();
         playSelectionSound();
-        setSelectedCategory(categories[activeIndex]);
       } else if (e.key === 'Escape') {
-        setSelectedCategory(null);
+        setInSkillsCarousel(false);
       }
     };
   
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [activeIndex, categories, currentCategory]);
+  }, [activeIndex, categories, inSkillsCarousel]);
 
   return (
     <div style={styles.root}>
@@ -144,7 +153,7 @@ export default function XMBNav({ onCategoryChange, currentCategory }) {
                   zIndex: zIndex,
                 }}
               >
-                <div style={{...styles.icon, ...(isActive ? styles.iconActive : {})}}>
+                <div style={{...styles.icon, ...(isActive ? styles.iconActive : {}), ...(category.id === 'skills' && inSkillsCarousel && !skillSelected ? styles.iconSkillsGlow : {})}}>
                   {category.icon}
                 </div>
               </div>
@@ -153,18 +162,21 @@ export default function XMBNav({ onCategoryChange, currentCategory }) {
         </div>
       </div>
 
-      {/* Bottom navigation dots */}
-      <div style={styles.dotIndicator}>
-        {categories.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => handleCategoryChange(index)}
-            style={{
-              ...styles.dot,
-              ...(index === activeIndex ? styles.dotActive : {}),
-            }}
-          />
-        ))}
+      {/* Bottom navigation dots with category label */}
+      <div style={styles.dotContainer}>
+        <div style={styles.categoryLabelBottom}>{categories[activeIndex].label}</div>
+        <div style={styles.dotIndicator}>
+          {categories.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => handleCategoryChange(index)}
+              style={{
+                ...styles.dot,
+                ...(index === activeIndex ? styles.dotActive : {}),
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       
@@ -227,11 +239,31 @@ const styles = {
     textShadow: '0 0 15px rgba(107, 112, 120, 0.8)',
     color: 'rgba(255, 255, 255, 0.9)',
   },
-  dotIndicator: {
+  iconSkillsGlow: {
+    animation: 'navSkillsGlow 2s ease-in-out infinite',
+    textShadow: '0 0 20px rgba(107, 112, 120, 0.9), 0 0 40px rgba(107, 112, 120, 0.6)',
+  },
+  dotContainer: {
     position: 'fixed',
     bottom: '60px',
     left: '50%',
     transform: 'translateX(-50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '12px',
+    pointerEvents: 'auto',
+  },
+  categoryLabelBottom: {
+    fontSize: '11px',
+    fontWeight: '500',
+    color: 'rgba(255, 255, 255, 0.5)',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
+    animation: 'fadeInLabel 0.4s ease-out',
+    textAlign: 'center',
+  },
+  dotIndicator: {
     display: 'flex',
     gap: '12px',
     pointerEvents: 'auto',
@@ -314,15 +346,19 @@ const styles = {
 // Add keyframe animations
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  @keyframes navSkillsGlow {
+    0%, 100% {
+      text-shadow: 0 0 20px rgba(107, 112, 120, 0.9), 0 0 40px rgba(107, 112, 120, 0.6);
+    }
+    50% {
+      text-shadow: 0 0 30px rgba(107, 112, 120, 1), 0 0 60px rgba(107, 112, 120, 0.8);
+    }
   }
-  
-  @keyframes slideUp {
+
+  @keyframes fadeInLabel {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(-4px);
     }
     to {
       opacity: 1;
