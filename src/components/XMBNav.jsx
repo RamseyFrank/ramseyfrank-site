@@ -131,7 +131,12 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
   }, [activeIndex, categories, inSkillsCarousel]);
 
   return (
-    <div style={styles.root}>
+    <div style={{
+      ...styles.root,
+      background: themeDark 
+        ? 'linear-gradient(135deg, rgba(240, 245, 250, 0.95), rgba(220, 230, 240, 0.95))'
+        : 'transparent'
+    }}>
       {/* Light/Dark Mode Toggle */}
       <div style={styles.toggleContainer}>
         <button 
@@ -182,7 +187,13 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
                   zIndex: zIndex,
                 }}
               >
-                <div style={{...styles.icon, ...(isActive ? styles.iconActive : {}), ...(category.id === 'skills' && inSkillsCarousel && !skillSelected ? styles.iconSkillsGlow : {})}}>
+                <div style={{
+                  ...styles.icon, 
+                  ...(isActive ? styles.iconActive : {}), 
+                  ...(category.id === 'skills' && inSkillsCarousel && !skillSelected ? styles.iconSkillsGlow : {}),
+                  color: themeDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.5)',
+                  ...(isActive && themeDark ? {color: 'rgba(0, 0, 0, 0.9)'} : {}),
+                }}>
                   {category.icon}
                 </div>
               </div>
@@ -193,7 +204,7 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
 
       {/* Bottom navigation dots with category label */}
       <div style={styles.dotContainer}>
-        <div style={styles.categoryLabelBottom}>{categories[activeIndex].label}</div>
+        <div style={{...styles.categoryLabelBottom, color: themeDark ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)'}}>{categories[activeIndex].label}</div>
         <div style={styles.dotIndicator}>
           {categories.map((_, index) => (
             <div
@@ -202,6 +213,8 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
               style={{
                 ...styles.dot,
                 ...(index === activeIndex ? styles.dotActive : {}),
+                background: themeDark ? (index === activeIndex ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)') : (index === activeIndex ? 'rgba(107, 112, 120, 0.8)' : 'rgba(255, 255, 255, 0.3)'),
+                borderColor: themeDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)',
               }}
             />
           ))}
@@ -219,13 +232,16 @@ const styles = {
     bottom: 'auto',
     left: 0,
     right: 0,
-    top: '15vh',
+    top: 0,
+    bottom: 0,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: '15vh',
     zIndex: 50,
     pointerEvents: 'none',
+    transition: 'background 0.6s ease',
   },
   toggleContainer: {
     position: 'fixed',
@@ -428,6 +444,26 @@ styleSheet.textContent = `
     }
     50% {
       box-shadow: 0 0 24px rgba(107, 112, 120, 0.6);
+    }
+  }
+
+  svg {
+    transition: all 0.5s ease;
+    transform-origin: center;
+  }
+
+  button[style*="toggleButtonActive"] svg {
+    animation: iconRotate 0.6s ease;
+  }
+
+  @keyframes iconRotate {
+    0% {
+      opacity: 0;
+      transform: rotate(-180deg) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
     }
   }
 
