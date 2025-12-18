@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function XMBNav({ onCategoryChange, currentCategory, skillSelected }) {
+export default function XMBNav({ onCategoryChange, currentCategory, skillSelected = false, onThemeChange }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [themeDark, setThemeDark] = useState(false);
   const [inSkillsCarousel, setInSkillsCarousel] = useState(false);
@@ -55,6 +55,11 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
       
     },
   ];
+
+  // Notify parent when theme changes
+  useEffect(() => {
+    onThemeChange?.(themeDark);
+  }, [themeDark, onThemeChange]);
 
   const hapticFeedback = () => {
     if (navigator.vibrate) {
@@ -134,7 +139,7 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
     <div style={{
       ...styles.root,
       background: themeDark 
-        ? 'linear-gradient(135deg, rgba(240, 245, 250, 0.95), rgba(220, 230, 240, 0.95))'
+        ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(245, 248, 255, 0.85))'
         : 'transparent'
     }}>
       {/* Light/Dark Mode Toggle */}
@@ -473,4 +478,7 @@ styleSheet.textContent = `
     color: rgba(255, 255, 255, 0.8) !important;
   }
 `;
-document.head.appendChild(styleSheet);
+if (!document.head.querySelector('style[data-xmb-nav]')) {
+  styleSheet.setAttribute('data-xmb-nav', 'true');
+  document.head.appendChild(styleSheet);
+}

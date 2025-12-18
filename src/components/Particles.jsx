@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
 
 const defaultColors = ['#ffffff', '#ffffff', '#ffffff'];
+const lightModeDefaultColors = ['#FF6B35', '#FF8C5A', '#FF7F50'];
 
 const hexToRgb = hex => {
   hex = hex.replace(/^#/, '');
@@ -95,6 +96,7 @@ const Particles = ({
   sizeRandomness = 1,
   cameraDistance = 2,
   disableRotation = true,
+  lightMode = false,
   className
 }) => {
   const containerRef = useRef(null);
@@ -142,7 +144,11 @@ const Particles = ({
     const positions = new Float32Array(count * 3);
     const randoms = new Float32Array(count * 4);
     const colors = new Float32Array(count * 3);
-    const palette = particleColors && particleColors.length > 0 ? particleColors : defaultColors;
+    
+    // Use light mode colors if specified
+    const palette = particleColors && particleColors.length > 0 
+      ? particleColors 
+      : (lightMode ? lightModeDefaultColors : defaultColors);
 
     for (let i = 0; i < count; i++) {
       let x, y, z, len;
@@ -232,7 +238,8 @@ const Particles = ({
     particleBaseSize,
     sizeRandomness,
     cameraDistance,
-    disableRotation
+    disableRotation,
+    lightMode
   ]);
 
   return (

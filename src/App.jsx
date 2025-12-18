@@ -8,12 +8,14 @@ import TileSystem from "./components/TileSystem";
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('home');
+  const [lightMode, setLightMode] = useState(false);
+  const [skillSelected, setSkillSelected] = useState(false);
 
   return (
     <div className="app-root">
-      <XMBIntro />
+      <XMBIntro lightMode={lightMode} />
       <div className="layer-base" />
-      <div className="layer-waves"><Wave /></div>
+      <div className="layer-waves"><Wave lightMode={lightMode} /></div>
       <div className="layer-particles">
         <Particles
           particleCount={100}
@@ -21,11 +23,21 @@ function App() {
           cameraDistance={15}
           particleBaseSize={35}
           sizeRandomness={0.5}
+          lightMode={lightMode}
         />
       </div>
       <div className="layer-ui">
-        <XMBNav onCategoryChange={setActiveCategory} />
-        <TileSystem selectedCategory={activeCategory} />
+        <XMBNav 
+          onCategoryChange={setActiveCategory}
+          currentCategory={activeCategory}
+          skillSelected={skillSelected}
+          onThemeChange={setLightMode}
+        />
+        <TileSystem 
+          selectedCategory={activeCategory}
+          lightMode={lightMode}
+          onSkillSelect={setSkillSelected}
+        />
       </div>
     </div>
   );

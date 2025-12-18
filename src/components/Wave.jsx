@@ -5,6 +5,19 @@ export default function Wave({ lightMode = false }) {
   const animationRef = useRef(null);
   const svgRef = useRef(null);
 
+  // Determine colors and opacities based on lightMode
+  const waveColors = lightMode ? [
+    '#FFB38A', '#FFC4A3', '#FFD4BC', '#FFC4A3', '#FFB38A'
+  ] : [
+    '#6B7280', '#9CA3AF', '#D1D5DB', '#9CA3AF', '#6B7280'
+  ];
+
+  const waveOpacities = lightMode ? [
+    0.15, 0.2, 0.25, 0.2, 0.15
+  ] : [
+    0.06, 0.1, 0.12, 0.1, 0.06
+  ];
+
   useEffect(() => {
     const widthStep = 4;
     let waveWidth = window.innerWidth;
@@ -15,41 +28,31 @@ export default function Wave({ lightMode = false }) {
         offsetY: -80, 
         amplitude: 60, 
         speed: 50, 
-        wavelength: 200,
-        color: '#6B7280',
-        opacity: 0.25
+        wavelength: 200
       },
       { 
         offsetY: -40, 
         amplitude: 65, 
         speed: 45, 
-        wavelength: 220,
-        color: '#9CA3AF',
-        opacity: 0.35
+        wavelength: 220
       },
       { 
         offsetY: 0, 
         amplitude: 70, 
         speed: 40, 
-        wavelength: 240,
-        color: '#6b7078',
-        opacity: 0.30
+        wavelength: 240
       },
       { 
         offsetY: 40, 
         amplitude: 65, 
         speed: 35, 
-        wavelength: 260,
-        color: '#9CA3AF',
-        opacity: 0.35
+        wavelength: 260
       },
       { 
         offsetY: 80, 
         amplitude: 60, 
         speed: 30, 
-        wavelength: 300,
-        color: '#6B7280',
-        opacity: 0.25
+        wavelength: 300
       }
     ];
 
@@ -153,19 +156,15 @@ export default function Wave({ lightMode = false }) {
     };
   }, []);
 
-  const waveConfigs = lightMode ? [
-    { color: '#FFB38A', opacity: 0.15 },
-    { color: '#FFC4A3', opacity: 0.2 },
-    { color: '#FFD4BC', opacity: 0.25 },
-    { color: '#FFC4A3', opacity: 0.2 },
-    { color: '#FFB38A', opacity: 0.15 }
-  ] : [
-    { color: '#6B7280', opacity: 0.06 },
-    { color: '#9CA3AF', opacity: 0.1 },
-    { color: '#D1D5DB', opacity: 0.12 },
-    { color: '#9CA3AF', opacity: 0.1 },
-    { color: '#6B7280', opacity: 0.06 }
-  ];
+  // Update path colors and opacities when lightMode changes
+  useEffect(() => {
+    pathRefs.current.forEach((path, index) => {
+      if (path) {
+        path.setAttribute('stroke', waveColors[index]);
+        path.setAttribute('stroke-opacity', waveOpacities[index]);
+      }
+    });
+  }, [lightMode, waveColors, waveOpacities]);
 
   return (
     <svg
@@ -191,13 +190,13 @@ export default function Wave({ lightMode = false }) {
           </feMerge>
         </filter>
       </defs>
-      {waveConfigs.map((config, index) => (
+      {[0, 1, 2, 3, 4].map((index) => (
         <path
           key={index}
           ref={el => pathRefs.current[index] = el}
           fill="none"
-          stroke={config.color}
-          strokeOpacity={config.opacity}
+          stroke={waveColors[index]}
+          strokeOpacity={waveOpacities[index]}
           strokeLinejoin="round"
           strokeLinecap="round"
           filter="url(#glow)"

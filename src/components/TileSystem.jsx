@@ -12,7 +12,7 @@ const SKILLS = [
   { id: 9, emoji: '🎭', name: 'UI/UX' },
 ];
 
-export default function TileSystem({ selectedCategory = 'home' }) {
+export default function TileSystem({ selectedCategory = 'home', lightMode = false, onSkillSelect }) {
   const [selectedTile, setSelectedTile] = useState(null);
   const [skillRotation, setSkillRotation] = useState(0);
   const [inSkillsCarousel, setInSkillsCarousel] = useState(false);
@@ -33,9 +33,9 @@ export default function TileSystem({ selectedCategory = 'home' }) {
           heading: '',
           content: (
             <div style={{fontSize: '24px', lineHeight: '1.8'}}>
-              Hi, I'm <span style={{fontWeight: '900', color: '#ffffff'}}>Ramsey Frank</span>.
+              Hi, I'm <span style={{fontWeight: '900', color: lightMode ? '#1a1a1a' : '#ffffff'}}>Ramsey Frank</span>.
               <br />
-              I'm <span style={{fontWeight: '900', color: '#6b7078'}}>learning to build</span> things on the web.
+              I'm <span style={{fontWeight: '900', color: lightMode ? '#FF6B35' : '#6b7078'}}>learning to build</span> things on the web.
             </div>
           )
         }
@@ -96,8 +96,15 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     if (selectedCategory !== 'skills') {
       setInSkillsCarousel(false);
       setSelectedTile(null);
+      onSkillSelect?.(false);
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, onSkillSelect]);
+
+  // Update skill selection state
+  useEffect(() => {
+    const isSkillSelected = selectedCategory === 'skills' && selectedTile !== null;
+    onSkillSelect?.(isSkillSelected);
+  }, [selectedTile, selectedCategory, onSkillSelect]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -177,7 +184,7 @@ export default function TileSystem({ selectedCategory = 'home' }) {
     if (current.type === 'text') {
       const tileIndex = current.tiles.findIndex(t => t.id === selectedTile);
       if (tileIndex > 0) {
-        return tileIndex * 220; // 180px tile + 24px gap + 16px padding
+        return tileIndex * 220;
       }
     }
     return 0;
@@ -185,8 +192,53 @@ export default function TileSystem({ selectedCategory = 'home' }) {
 
   if (!current) return null;
 
-  // Pass skill selected state to XMBNav
-  const isSkillSelected = current.type === 'skills' && selectedTile !== null;
+  const getTileStyles = () => ({
+    ...styles.tile,
+    background: lightMode 
+      ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(245, 248, 255, 0.7))'
+      : 'linear-gradient(135deg, rgba(60, 60, 60, 0.25), rgba(40, 40, 40, 0.25))',
+    border: lightMode 
+      ? '1px solid rgba(0, 0, 0, 0.1)'
+      : '1px solid rgba(107, 112, 120, 0.25)',
+    color: lightMode ? '#1a1a1a' : 'white',
+  });
+
+  const getTileActiveStyles = () => ({
+    ...styles.tileActive,
+    background: lightMode 
+      ? 'linear-gradient(135deg, rgba(255, 200, 124, 0.3), rgba(255, 180, 100, 0.3))'
+      : 'linear-gradient(135deg, rgba(60, 60, 60, 0.25), rgba(40, 40, 40, 0.25))',
+    border: lightMode 
+      ? '2px solid rgba(255, 107, 53, 0.6)'
+      : '2px solid rgba(107, 112, 120, 0.8)',
+    boxShadow: lightMode
+      ? '0 0 20px rgba(255, 107, 53, 0.4), inset 0 1px 0 rgba(0, 0, 0, 0.05)'
+      : '0 0 20px rgba(107, 112, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+  });
+
+  const getSkillTileStyles = () => ({
+    ...styles.skillTile,
+    background: lightMode
+      ? 'linear-gradient(135deg, rgba(255, 240, 220, 0.6), rgba(255, 230, 200, 0.6))'
+      : 'linear-gradient(135deg, rgba(40, 40, 55, 0.5), rgba(30, 30, 45, 0.5))',
+    border: lightMode
+      ? '1px solid rgba(255, 107, 53, 0.2)'
+      : '1px solid rgba(107, 112, 120, 0.2)',
+    color: lightMode ? '#1a1a1a' : 'white',
+  });
+
+  const getSkillTileActiveStyles = () => ({
+    ...styles.skillTileActive,
+    background: lightMode
+      ? 'linear-gradient(135deg, rgba(255, 150, 80, 0.5), rgba(255, 120, 40, 0.5))'
+      : 'linear-gradient(135deg, rgba(100, 110, 130, 0.6), rgba(70, 80, 100, 0.6))',
+    border: lightMode
+      ? '1.5px solid rgba(255, 107, 53, 0.7)'
+      : '1.5px solid rgba(107, 112, 120, 0.5)',
+    boxShadow: lightMode
+      ? '0 8px 24px rgba(255, 107, 53, 0.3)'
+      : '0 8px 24px rgba(107, 112, 120, 0.3)',
+  });
 
   return (
     <div style={{
@@ -204,20 +256,25 @@ export default function TileSystem({ selectedCategory = 'home' }) {
                 playNavigationSound();
               }}
               style={{
-                ...styles.tile,
-                ...(selectedTile === tile.id ? styles.tileActive : {}),
+                ...getTileStyles(),
+                ...(selectedTile === tile.id ? getTileActiveStyles() : {}),
                 animation: `fadeInUp 0.5s ease-out ${idx * 0.1}s both`,
                 marginTop: idx === 0 && selectedTile && current.tiles[1]?.id === selectedTile ? '-350px' : idx === 1 && selectedTile && current.tiles[1]?.id === selectedTile ? '350px' : '0',
-                transition: 'margin-top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                transition: 'margin-top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), all 0.3s ease',
               }}
             >
-              <h3 style={styles.tileHeading}>{tile.heading}</h3>
-              <p style={styles.tileContent}>{tile.content}</p>
+              <h3 style={{...styles.tileHeading, color: lightMode ? '#1a1a1a' : '#ffffff'}}>{tile.heading}</h3>
+              <p style={{...styles.tileContent, color: lightMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.75)'}}>{tile.content}</p>
             </div>
           ))}
         </div>
       ) : (
-        <div style={styles.skillsScene}>
+        <div style={{
+          ...styles.skillsScene,
+          background: lightMode
+            ? 'radial-gradient(ellipse at center, rgba(255, 107, 53, 0.05) 0%, transparent 70%)'
+            : 'radial-gradient(ellipse at center, rgba(107, 112, 120, 0.05) 0%, transparent 70%)',
+        }}>
           <div style={styles.skillsCarousel}>
             <div
               style={{
@@ -249,19 +306,30 @@ export default function TileSystem({ selectedCategory = 'home' }) {
                   >
                     <div 
                       style={{
-                        ...styles.skillTile, 
-                        ...(isSelected ? styles.skillTileActive : {}),
+                        ...getSkillTileStyles(),
+                        ...(isSelected ? getSkillTileActiveStyles() : {}),
                       }}
                     >
                       <div style={styles.emoji}>{skill.emoji}</div>
-                      <div style={styles.skillName}>{skill.name}</div>
+                      <div style={{...styles.skillName, color: lightMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)'}}>{skill.name}</div>
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div style={styles.centerFocus}>
-              <div style={styles.focusRing} />
+            <div style={{
+              ...styles.centerFocus,
+              ...(!lightMode ? {} : {
+                borderColor: 'rgba(255, 107, 53, 0.3)'
+              })
+            }}>
+              <div style={{
+                ...styles.focusRing,
+                borderColor: lightMode ? 'rgba(255, 107, 53, 0.3)' : 'rgba(107, 112, 120, 0.3)',
+                boxShadow: lightMode
+                  ? '0 0 30px rgba(255, 107, 53, 0.2) inset'
+                  : '0 0 30px rgba(107, 112, 120, 0.2) inset',
+              }} />
             </div>
           </div>
         </div>
@@ -496,4 +564,7 @@ styleSheet.textContent = `
     background: rgba(107, 112, 120, 0.5);
   }
 `;
-document.head.appendChild(styleSheet);
+if (!document.head.querySelector('style[data-tile-system]')) {
+  styleSheet.setAttribute('data-tile-system', 'true');
+  document.head.appendChild(styleSheet);
+}
