@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
 
 const defaultColors = ['#ffffff', '#ffffff', '#ffffff'];
-const lightModeDefaultColors = ['#FF6B35', '#FF8C5A', '#FF7F50'];
+const lightModeDefaultColors = ['#000000', '#1a1a1a', '#0d0d0d'];
 
 const hexToRgb = hex => {
   hex = hex.replace(/^#/, '');

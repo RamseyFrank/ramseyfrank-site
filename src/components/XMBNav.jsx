@@ -138,9 +138,7 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
   return (
     <div style={{
       ...styles.root,
-      background: themeDark 
-        ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(245, 248, 255, 0.85))'
-        : 'transparent'
+      background: 'transparent'
     }}>
       {/* Light/Dark Mode Toggle */}
       <div style={styles.toggleContainer}>

@@ -12,7 +12,7 @@ function App() {
   const [skillSelected, setSkillSelected] = useState(false);
 
   return (
-    <div className="app-root">
+    <div className="app-root" style={{ background: lightMode ? 'linear-gradient(135deg, #f8f6f3 0%, #faf8f5 25%, #f5f3f0 75%, #f8f6f3 100%)' : 'linear-gradient(135deg, #000000 0%, #0d0d0d 25%, #1a1a1a 50%, #0d0d0d 75%, #000000 100%)' }}>
       <XMBIntro lightMode={lightMode} />
       <div className="layer-base" />
       <div className="layer-waves"><Wave lightMode={lightMode} /></div>
