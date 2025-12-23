@@ -7,13 +7,13 @@ export default function Wave({ lightMode = false }) {
 
   // Determine colors and opacities based on lightMode
   const waveColors = lightMode ? [
-    '#FFB38A', '#FFC4A3', '#FFD4BC', '#FFC4A3', '#FFB38A'
+    '#D4A574', '#E8B88A', '#F5CBA0', '#E8B88A', '#D4A574'
   ] : [
     '#6B7280', '#9CA3AF', '#D1D5DB', '#9CA3AF', '#6B7280'
   ];
 
   const waveOpacities = lightMode ? [
-    0.15, 0.2, 0.25, 0.2, 0.15
+    0.4, 0.5, 0.6, 0.5, 0.4
   ] : [
     0.06, 0.1, 0.12, 0.1, 0.06
   ];

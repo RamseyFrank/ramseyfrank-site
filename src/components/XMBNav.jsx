@@ -145,7 +145,8 @@ export default function XMBNav({ onCategoryChange, currentCategory, skillSelecte
         <button 
           style={{
             ...styles.toggleButton,
-            ...(themeDark ? styles.toggleButtonActive : {})
+            ...(themeDark ? styles.toggleButtonActive : {}),
+            color: themeDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.6)'
           }}
           onClick={() => setThemeDark(!themeDark)}
         >
